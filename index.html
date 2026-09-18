@@ -138,6 +138,8 @@
   .plates{display:grid;gap:clamp(14px,2vw,26px);padding-top:clamp(24px,4vh,50px)}
   .plate{background:var(--surface);overflow:hidden}
   .plate svg,.plate img{display:block;width:100%;height:auto;max-width:100%}
+  /* 세로로 아주 긴 한 장짜리 이미지(포폴 시트)는 가운데로 모아 읽기 좋게 */
+  .plate.tall{max-width:980px;margin-inline:auto;background:none}
   .plates .wide{grid-column:1/-1}
   @media (min-width:761px){.plates{grid-template-columns:1fr 1fr}}
   .credits{
@@ -484,7 +486,9 @@ function projectView(slug){
   const imgs = (p.images && p.images.length) ? p.images : (p.cover_url ? [p.cover_url] : null);
   const plates = imgs
     ? imgs.map((src,n) => '<div class="plate' + (n===0 || imgs.length%2===1 && n===imgs.length-1 ? ' wide' : '') + '">' +
-        '<img src="' + src + '" alt="' + esc(p.title) + '" loading="lazy"></div>').join("")
+        '<img src="' + src + '" alt="' + esc(p.title) + '" loading="lazy" ' +
+        'onload="if(this.naturalHeight/this.naturalWidth>2){this.parentNode.classList.add(\'wide\',\'tall\')}">' +
+        '</div>').join("")
     : '<div class="plate wide">' + art(p.art,1200,700) + '</div>' +
       '<div class="plate">' + art(alt,600,750) + '</div>' +
       '<div class="plate">' + art(flip,600,750) + '</div>';
