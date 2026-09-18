@@ -508,8 +508,10 @@ function projectView(slug){
   const imgs = (p.images && p.images.length) ? p.images : (p.cover_url ? [p.cover_url] : null);
   const plates = imgs
     ? imgs.map((src,n) => {
-        const wide = (n===0 || imgs.length%2===1 && n===imgs.length-1) ? ' wide' : '';
-        return '<div class="plate' + wide + (media(src) ? ' wide' : '') + '">' + (media(src) ||
+        const m = media(src);
+        // 영상은 2열 그리드에 그대로 배치. 이미지 첫 장만 가로로 크게.
+        const wide = (!m && n===0) || (imgs.length%2===1 && n===imgs.length-1) ? ' wide' : '';
+        return '<div class="plate' + wide + '">' + (m ||
           '<img src="' + src + '" alt="' + esc(p.title) + '" loading="lazy" ' +
           'onload="if(this.naturalHeight/this.naturalWidth>2){this.parentNode.classList.add(\'wide\',\'tall\')}">'
         ) + '</div>';
